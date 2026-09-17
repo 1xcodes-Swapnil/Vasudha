@@ -99,14 +99,15 @@ export const IntelligenceRightPanel: React.FC<IntelligenceRightPanelProps> = ({
             return (
               <button
                 key={item.id}
+                type="button"
                 onClick={item.action}
-                className="w-full flex items-center justify-between p-2 rounded-xl text-left hover:bg-stone-50 text-stone-700 hover:text-stone-900 group transition-all"
+                className="w-full flex items-center justify-between p-2.5 rounded-xl text-left hover:bg-emerald-50/60 active:bg-emerald-100/70 text-stone-700 hover:text-emerald-950 group transition-all cursor-pointer border border-transparent hover:border-emerald-200/60"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Icon className="w-3.5 h-3.5 text-stone-500 group-hover:text-emerald-700 shrink-0 transition-colors" />
                   <span className="text-xs font-medium truncate">{item.label}</span>
                 </div>
-                <ChevronRight className="w-3.5 h-3.5 text-stone-400 group-hover:text-stone-700 group-hover:translate-x-0.5 transition-all shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 text-stone-400 group-hover:text-emerald-800 group-hover:translate-x-0.5 transition-all shrink-0" />
               </button>
             );
           })}
@@ -116,6 +117,7 @@ export const IntelligenceRightPanel: React.FC<IntelligenceRightPanelProps> = ({
       {/* 3. Recent Analysis Card */}
       <div className="bg-white rounded-2xl border border-stone-200/80 p-4 shadow-2xs space-y-3">
         <button
+          type="button"
           onClick={() => setIsRecentOpen(!isRecentOpen)}
           className="w-full flex items-center justify-between text-stone-800 text-xs font-semibold cursor-pointer"
         >
@@ -135,8 +137,9 @@ export const IntelligenceRightPanel: React.FC<IntelligenceRightPanelProps> = ({
             {RECENT_ANALYSES.map((analysis) => (
               <button
                 key={analysis.id}
+                type="button"
                 onClick={() => onSelectRecentAnalysis && onSelectRecentAnalysis(analysis.title)}
-                className="w-full flex items-center justify-between p-2 rounded-xl text-left hover:bg-stone-50 text-stone-700 hover:text-stone-900 group transition-all"
+                className="w-full flex items-center justify-between p-2.5 rounded-xl text-left hover:bg-stone-50 active:bg-stone-100 text-stone-700 hover:text-stone-900 group transition-all cursor-pointer border border-transparent hover:border-stone-200/60"
               >
                 <div className="min-w-0 pr-2">
                   <div className="flex items-center gap-1.5">
@@ -149,7 +152,7 @@ export const IntelligenceRightPanel: React.FC<IntelligenceRightPanelProps> = ({
                       {analysis.title}
                     </span>
                   </div>
-                  <div className="text-[10px] text-stone-600 pl-3 font-mono">
+                  <div className="text-[10px] text-stone-500 pl-3 font-mono">
                     {analysis.time}
                   </div>
                 </div>
