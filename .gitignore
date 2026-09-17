@@ -1,0 +1,95 @@
+# ==============================================================================
+# VASUDHA — Comprehensive Git Ignore Rules
+# ==============================================================================
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+!.env.template
+!.env.sample
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+ENV/
+
+# Node
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+
+# Build output
+dist/
+build/
+.vite/
+.next/
+out/
+
+# IDE/editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local databases / runtime data
+*.db
+*.sqlite
+*.sqlite3
+
+# Local generated data
+data/raw/
+data/cache/
+data/tmp/
+tmp/
+temp/
+cache/
+
+# Secrets / credentials
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+*-service-account.json
+
+# Local deployment/config secrets
+secrets/
+.secret/
+.local/
+
+# Coverage/test artifacts
+coverage/
+.pytest_cache/
+
+# Jupyter/runtime & temporary tools
+.ipynb_checkpoints/
+get-pip.py
