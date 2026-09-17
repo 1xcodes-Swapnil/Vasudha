@@ -6,6 +6,26 @@
 
 VASUDHA is an auditable biodiversity intelligence system engineered to eliminate ecological hallucinations in environmental decision-making. Rather than using large language models as ungrounded sources of truth, VASUDHA implements a strict 13-stage biophysical reasoning pipeline that combines structured ecological knowledge, multi-metric causal reasoning across observed environmental variables, and scientific retrieval grounded in authoritative consensus literature (IPCC, IPBES, FAO, UNEP, CBD).
 
+## Tech Stack
+| Category                     | Technologies                                                       |
+| ---------------------------- | ------------------------------------------------------------------ |
+| **Frontend**                 | React 19, TypeScript, Vite                                         |
+| **Styling**                  | Tailwind CSS                                                       |
+| **Maps & Geospatial UI**     | React Leaflet, OpenStreetMap                                       |
+| **Backend**                  | Python, FastAPI, Pydantic                                          |
+| **Database**                 | PostgreSQL, Supabase                                               |
+| **Vector Database**          | pgvector                                                           |
+| **AI / LLM**                 | Google Gemini                                                      |
+| **Embeddings**               | Sentence Transformers, MiniLM                                      |
+| **RAG**                      | Retrieval-Augmented Generation, Semantic Vector Search             |
+| **Ecological Reasoning**     | Structured Ecological Relationships, Multi-Metric Reasoning Engine |
+| **Environmental Data**       | SoilGrids, GBIF, WorldClim                                         |
+| **Scientific Evidence**      | IPCC, IPBES, FAO, UNEP, CBD                                        |
+| **Data Validation**          | Pydantic, Schema Validation, Claim Validation                      |
+| **Testing**                  | Python Unit Tests, Integration Tests, RAG & Guardrail Tests        |
+| **Version Control**          | Git, GitHub                                                        |
+| **Deployment**               | Render                                                             |
+
 ---
 
 ## 1. The Problem: Why Generic LLM Chatbots Fail in Ecology
