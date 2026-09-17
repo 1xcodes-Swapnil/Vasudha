@@ -11,6 +11,8 @@ import {
   Wheat,
   Sprout,
   ShieldCheck,
+  Compass,
+  BookOpen,
 } from 'lucide-react';
 import {
   EnvironmentalState,
@@ -55,12 +57,12 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Dynamic pill descriptors based on current environmental state
+  // Dynamic status descriptors based on current environmental state
   const rainfallLevel =
     currentState.climate.rainfall === null || currentState.climate.rainfall === undefined
       ? 'Low'
       : currentState.climate.rainfall < 600
-      ? 'Low'
+      ? 'Deficit (<600mm)'
       : currentState.climate.rainfall < 1200
       ? 'Moderate'
       : 'High';
@@ -69,7 +71,7 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
     currentState.soil.moisture === null || currentState.soil.moisture === undefined
       ? 'Low'
       : currentState.soil.moisture < 20
-      ? 'Low'
+      ? 'Deficit (14%)'
       : currentState.soil.moisture < 40
       ? 'Moderate'
       : 'Adequate';
@@ -84,11 +86,18 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
     currentState.biodiversity.habitat_diversity === undefined
       ? 'Low'
       : currentState.biodiversity.habitat_diversity < 35
-      ? 'Low'
+      ? 'Fragmented (22/100)'
       : 'Moderate';
 
   // Check if active user dialogue has started
   const hasUserMessages = messages.some((m) => m.role === 'user');
+
+  const SUGGESTED_QUERIES = [
+    { label: 'Assess Nandurbar baseline', query: 'Analyze the Nandurbar benchmark environmental state and identify primary ecological pressures.' },
+    { label: 'Why this intervention?', query: 'Explain the causal chain and biophysical mechanisms behind the prescribed agroforestry interventions.' },
+    { label: 'Inspect scientific evidence', query: 'What peer-reviewed IPCC and FAO evidence supports carbon recarbonization in semi-arid drylands?' },
+    { label: 'Nature risk profile', query: 'What are the critical ecological tipping points and nature risks for this landscape?' },
+  ];
 
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || inputMessage).trim();
@@ -173,47 +182,63 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
 
       {/* Main Center Canvas: The Chatbot & Hero Area */}
       <div className="relative flex-1 w-full min-h-[620px] rounded-3xl overflow-hidden flex flex-col justify-between">
-        {/* Subtle watercolor misty landscape background at bottom */}
+        {/* Watercolor misty landscape background at bottom */}
         <MistyLandscape className="z-0" />
 
-        {/* Content Container (elevated above background art) */}
-        <div className="relative z-10 w-full flex-1 flex flex-col justify-center px-2 sm:px-6 py-6 sm:py-8">
-          {/* 1. HERO BRAND SECTION (Exact layout from design mockup) */}
+        {/* Content Container */}
+        <div className="relative z-10 w-full flex-1 flex flex-col justify-center px-3 sm:px-6 py-6 sm:py-8">
+          {/* 1. HERO BRAND SECTION */}
           <div className="flex flex-col items-center text-center max-w-xl mx-auto space-y-4">
-            {/* Vasudha Emblem & Typography */}
+            {/* Precision Vasudha Emblem & Wordmark */}
             <VasudhaLogo variant="full" size="xl" theme="light" showTagline={true} />
 
             {/* Description Subtext */}
-            <p className="text-xs sm:text-sm text-[#4d6359] max-w-md mx-auto font-sans leading-relaxed pt-1">
+            <p className="text-xs sm:text-sm text-[#3d594c] max-w-md mx-auto font-sans leading-relaxed pt-0.5">
               Understand environmental conditions, trace ecological relationships, and discover
               evidence-backed actions for biodiversity.
             </p>
 
-            {/* 4 Status Pills in a horizontal row */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 pt-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef3ed] border border-[#dce5db] text-[11px] font-medium text-[#2c473c] shadow-2xs">
-                <CloudRain className="w-3.5 h-3.5 text-[#3a6051]" />
+            {/* 4 Status Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 pt-1.5">
+              <button
+                onClick={() => onNavigateTab('environment')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef4ee] hover:bg-[#e4ede4] border border-[#d6e2d5] text-[11px] font-medium text-[#234436] shadow-2xs transition-colors cursor-pointer"
+                title="View climate rainfall parameters"
+              >
+                <CloudRain className="w-3.5 h-3.5 text-[#2e5e4b]" />
                 <span>Rainfall: {rainfallLevel}</span>
-              </div>
+              </button>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef3ed] border border-[#dce5db] text-[11px] font-medium text-[#2c473c] shadow-2xs">
-                <Droplets className="w-3.5 h-3.5 text-[#3a6051]" />
+              <button
+                onClick={() => onNavigateTab('environment')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef4ee] hover:bg-[#e4ede4] border border-[#d6e2d5] text-[11px] font-medium text-[#234436] shadow-2xs transition-colors cursor-pointer"
+                title="View soil moisture parameters"
+              >
+                <Droplets className="w-3.5 h-3.5 text-[#2e5e4b]" />
                 <span>Soil Moisture: {moistureLevel}</span>
-              </div>
+              </button>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef3ed] border border-[#dce5db] text-[11px] font-medium text-[#2c473c] shadow-2xs">
-                <Wheat className="w-3.5 h-3.5 text-[#3a6051]" />
+              <button
+                onClick={() => onNavigateTab('environment')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef4ee] hover:bg-[#e4ede4] border border-[#d6e2d5] text-[11px] font-medium text-[#234436] shadow-2xs transition-colors cursor-pointer"
+                title="View land use parameters"
+              >
+                <Wheat className="w-3.5 h-3.5 text-[#2e5e4b]" />
                 <span>Land Use: {landUseLevel}</span>
-              </div>
+              </button>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef3ed] border border-[#dce5db] text-[11px] font-medium text-[#2c473c] shadow-2xs">
-                <Sprout className="w-3.5 h-3.5 text-[#3a6051]" />
+              <button
+                onClick={() => onNavigateTab('environment')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#eef4ee] hover:bg-[#e4ede4] border border-[#d6e2d5] text-[11px] font-medium text-[#234436] shadow-2xs transition-colors cursor-pointer"
+                title="View biodiversity habitat index"
+              >
+                <Sprout className="w-3.5 h-3.5 text-[#2e5e4b]" />
                 <span>Habitat: {habitatLevel}</span>
-              </div>
+              </button>
             </div>
           </div>
 
-          {/* 2. CONVERSATION STREAM (Displays when active dialogue begins) */}
+          {/* 2. CONVERSATION STREAM */}
           {hasUserMessages && (
             <div className="w-full max-w-2xl mx-auto my-6 space-y-4 max-h-[440px] overflow-y-auto px-1 pr-2">
               {messages
@@ -226,10 +251,10 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
                       className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200`}
                     >
                       <div
-                        className={`max-w-[88%] sm:max-w-[80%] rounded-2xl p-4 text-xs leading-relaxed space-y-2 shadow-xs ${
+                        className={`max-w-[88%] sm:max-w-[82%] rounded-2xl p-4 text-xs leading-relaxed space-y-2 shadow-xs ${
                           isUser
-                            ? 'bg-[#1b3b30] text-white rounded-br-xs'
-                            : 'bg-white/95 text-stone-800 border border-stone-200/90 rounded-bl-xs'
+                            ? 'bg-[#173b2d] text-white rounded-br-xs'
+                            : 'bg-white/95 text-stone-800 border border-stone-200/90 rounded-bl-xs backdrop-blur-xs'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-1.5 text-[10px] font-mono opacity-85">
@@ -255,7 +280,7 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
                 <div className="flex justify-start">
                   <div className="bg-white/95 border border-stone-200/90 rounded-2xl rounded-bl-xs p-4 text-xs text-stone-600 font-mono space-y-2 shadow-xs animate-pulse">
                     <div className="flex items-center gap-2 text-emerald-800 font-semibold">
-                      <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                      <Sparkles className="w-3.5 h-3.5 animate-spin text-emerald-600" />
                       <span>Synthesizing multi-metric ecological relationships...</span>
                     </div>
                     <p className="text-[11px] text-stone-500">
@@ -352,10 +377,29 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
             </div>
           )}
 
-          {/* 3. FLOATING CHAT INPUT BOX (Exact design from mockup) */}
-          <div className="w-full max-w-2xl mx-auto mt-6">
-            <div className="bg-white rounded-2xl sm:rounded-[22px] border border-stone-200/90 shadow-sm p-4 space-y-3 transition-shadow focus-within:shadow-md focus-within:border-emerald-700/40">
-              {/* Textarea / Input */}
+          {/* 3. SUGGESTED BENCHMARK PROMPT PILLS (Before dialogue starts) */}
+          {!hasUserMessages && (
+            <div className="w-full max-w-2xl mx-auto mt-4 pt-1">
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {SUGGESTED_QUERIES.map((item, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleSendMessage(item.query)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 hover:bg-white border border-stone-200/80 hover:border-emerald-600 text-stone-700 hover:text-emerald-900 text-xs font-medium shadow-2xs transition-all cursor-pointer group"
+                  >
+                    <Sparkles className="w-3 h-3 text-emerald-600 group-hover:rotate-12 transition-transform" />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 4. FLOATING CHAT INPUT BOX */}
+          <div className="w-full max-w-2xl mx-auto mt-5">
+            <div className="bg-white rounded-2xl sm:rounded-[22px] border border-stone-200/90 shadow-xs hover:shadow-md p-3.5 sm:p-4 space-y-3 transition-all focus-within:shadow-md focus-within:border-emerald-700/50">
+              {/* Textarea */}
               <textarea
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
@@ -378,21 +422,21 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
                   <span>{attachedFileName}</span>
                   <button
                     onClick={() => setAttachedFileName(null)}
-                    className="text-stone-400 hover:text-stone-700 ml-1"
+                    className="text-stone-400 hover:text-stone-700 ml-1 cursor-pointer"
                   >
                     ×
                   </button>
                 </div>
               )}
 
-              {/* Bottom Action Row: Attachment, Location, Submit Button */}
+              {/* Bottom Action Row */}
               <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   {/* Attachment Icon Button */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors"
+                    className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors cursor-pointer"
                     title="Attach ecological survey / soil dataset (.csv, .json, .txt)"
                   >
                     <Paperclip className="w-4 h-4" />
@@ -402,19 +446,19 @@ export const IntelligenceView: React.FC<IntelligenceViewProps> = ({
                   <button
                     type="button"
                     onClick={() => onNavigateTab('location')}
-                    className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors"
+                    className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors cursor-pointer"
                     title="View & select geographic parcel context"
                   >
                     <MapPin className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* Circular Dark Forest Green Submit Button with Arrow → */}
+                {/* Submit Button */}
                 <button
                   type="button"
                   onClick={() => handleSendMessage()}
                   disabled={loading || !inputMessage.trim()}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1b3b30] hover:bg-[#132c24] disabled:opacity-40 disabled:hover:bg-[#1b3b30] text-white flex items-center justify-center transition-all shadow-xs cursor-pointer"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#163b2c] hover:bg-[#0f2a20] disabled:opacity-40 disabled:hover:bg-[#163b2c] text-white flex items-center justify-center transition-all shadow-xs cursor-pointer"
                   title="Send message to VASUDHA"
                 >
                   <ArrowRight className="w-4 h-4" />
